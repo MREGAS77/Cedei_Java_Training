@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation=" 
+        http://www.springframework.org/schema/mvc      http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans    http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <security:http auto-config="true">
+        <security:intercept-url pattern="/app/denied.html" access="permitAll()" />
+        <security:intercept-url pattern="/app/login.html" access="permitAll()" />
+        <security:intercept-url pattern="/app/**" access="isFullyAuthenticated()" />
+        <security:intercept-url pattern="/api/ws/**" access="permitAll()" />
+                
+        <security:form-login login-page="/app/login.html" authentication-failure-url="/app/login.html?login_error=true" />
+        <security:logout/>
+        <security:access-denied-handler error-page="/app/denied.html"/>
+        <security:csrf disabled="true"/>
+    </security:http>
+    
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider>
+            <security:password-encoder hash="md5">
+                <security:salt-source system-wide="MySalt"/>
+            </security:password-encoder>
+            <security:user-service properties="/WEB-INF/users.properties" />
+        </security:authentication-provider>
+    </security:authentication-manager>
+    
+    <security:global-method-security secured-annotations="enabled">
+        <security:protect-pointcut expression="execution(* net.atos.cedei.cursospring..*Service.update*(..))" access="ROLE_ADMIN" />
+    </security:global-method-security>
+
+</beans>

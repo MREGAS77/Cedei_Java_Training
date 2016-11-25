@@ -1,0 +1,68 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+		<h:form id="filtros" >
+			<p:panel header="Criterios de Búsqueda de Roles">
+				<p:panelGrid columns="2" >
+					<p:outputLabel for="nombreFiltro" value="Nombre:" />
+					<p:inputText required="false" id="nombreFiltro" value="#{rolController.filtro.nombre}"/>
+					<p:outputLabel for="descripcionFiltro" value="Descripcion:" />
+					<p:inputText required="false" id="descripcionFiltro" value="#{rolController.filtro.descripcion}"/>
+					<p:commandButton id="buscar" value="Buscar" actionListener="#{rolController.buscar}" update="listaResultados" />
+					<p:commandButton id="nuevo" value="Nuevo" resetValues="true" actionListener="#{rolController.nuevoRol}" update="detalleForm" oncomplete="PF('detalle').show()"/>
+				</p:panelGrid>
+			</p:panel>
+			
+			<p:panel header="Resultados de la Búsqueda de Roles">
+				<p:dataTable 	id="listaResultados" value="#{rolController.lista}" rowKey="#{rol.nombre}" 
+								var="rol" sortMode="single" selectionMode="single" selection="#{rolController.rolSeleccionado}">
+		
+					<p:ajax event="rowSelect" update="detalleForm:detalleFragment" resetValues="true" oncomplete="PF('detalle').show()" listener="#{rolController.rellenarPickList}"/>
+					
+					<p:column headerText="Nombre" sortBy="#{rol.nombre}">
+						<h:outputText value="#{rol.nombre}" />
+					</p:column>
+					<p:column headerText="Descripcion" sortBy="#{rol.descripcion}">
+						<h:outputText value="#{rol.descripcion}" />
+					</p:column>
+					<p:column headerText="Permisos" sortBy="#{rol.getNombrePermisos()}">
+						<h:outputText value="#{rol.getNombrePermisos()}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			
+		</h:form>
+			
+			
+		<h:form id="detalleForm">
+			<p:dialog id="dialogoDetalle" widgetVar="detalle" resizable="false" header="Detalle de Rol" modal="true">
+				<p:fragment id="detalleFragment">
+					<h:panelGrid columns="2" cellpadding="3">
+						<p:outputLabel for="nombre" value="Nombre:" />
+						<p:inputText required="true" id="nombre" maxlength="30" value="#{rolController.rolSeleccionado.nombre}" disabled="#{rolController.rolSeleccionado.nombre != null}"/>
+						<p:outputLabel for="descripcion" value="Descripcion:" />
+						<p:inputText required="false" id="descripcion" maxlength="255" value="#{rolController.rolSeleccionado.descripcion}"/>
+					</h:panelGrid>
+					<h:panelGrid columns="1" cellpadding="3">
+					    <p:pickList id="pickList" converter="PickListPermisoConverter" value="#{rolController.permisos}" var="permiso" itemLabel="#{permiso.nombre}" itemValue="#{permiso}">
+						   	<f:facet name="sourceCaption">Permisos disponibles</f:facet>
+						   	<f:facet name="targetCaption">Permisos asignados</f:facet>
+					    </p:pickList>
+					</h:panelGrid>	
+					<h:panelGrid columns="3" >
+						<p:commandButton id="guardarNuevo" value="Guardar" actionListener="#{rolController.insertar}" update="detalleFragment,filtros:listaResultados" rendered="#{rolController.rolSeleccionado.nombre == null}" oncomplete="if (args &amp;&amp; !args.validationFailed) PF('detalle').hide()"/>
+						<p:commandButton id="modificar" value="Guardar" actionListener="#{rolController.actualizar}" update="detalleFragment,filtros:listaResultados" rendered="#{rolController.rolSeleccionado.nombre != null}"  oncomplete="if (args &amp;&amp; !args.validationFailed) PF('detalle').hide()"/>
+						<p:commandButton id="eliminar" value="Borrar" actionListener="#{rolController.borrar}" update="detalleFragment,filtros:listaResultados" rendered="#{rolController.rolSeleccionado.nombre != null}"  oncomplete="if (args &amp;&amp; !args.validationFailed) PF('detalle').hide()"/>
+						<p:commandButton id="cancelar" value="Cancelar" immediate="true" oncomplete="PF('detalle').hide()"/>
+					</h:panelGrid>
+				</p:fragment>
+			
+			</p:dialog>
+		
+		</h:form>
+	</ui:define>
+</ui:composition>

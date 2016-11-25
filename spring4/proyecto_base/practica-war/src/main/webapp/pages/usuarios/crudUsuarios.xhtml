@@ -1,0 +1,119 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+		<h:form id="filtros">
+			<p:panel header="Criterios de Búsqueda de Usuarios">
+				<p:panelGrid columns="6">
+					<p:outputLabel for="nombreFiltro" value="Nombre:" />
+					<p:inputText required="false" id="nombreFiltro"
+						value="#{usuarioController.filtro.nombre}" />
+					<p:outputLabel for="codigoFiltro" value="Código:" />
+					<p:inputText required="false" id="codigoFiltro"
+						value="#{usuarioController.filtro.codigo}" />
+					<p:outputLabel for="emailFiltro" value="EMail:" />
+					<p:inputText required="false" id="emailFiltro"
+						value="#{usuarioController.filtro.email}" />
+					<p:outputLabel for="rol" value="Rol:" />
+					<p:selectOneMenu id="rol"
+						value="#{usuarioController.filtro.rol.nombre}">
+    					<f:selectItem  itemValue="#{null}" itemLabel="TODOS" />
+						<f:selectItems value="#{usuarioController.comboRoles}" var="rol"
+							itemLabel="#{rol.nombre}" itemValue="#{rol.nombre}" />
+					</p:selectOneMenu>			
+					<p:commandButton id="buscar" value="Buscar"
+						actionListener="#{usuarioController.buscar}"
+						update="listaResultados" />
+					<p:commandButton id="nuevo" value="Nuevo"
+						actionListener="#{usuarioController.nuevoUsuario}"
+						update="detalleForm" oncomplete="PF('detalle').show()" />
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel header="Resultados de la Búsqueda de Usuarios">
+				<p:dataTable id="listaResultados" value="#{usuarioController.lista}"
+					rowKey="#{usuario.codigo}" var="usuario" sortMode="single"
+					selectionMode="single"
+					selection="#{usuarioController.usuarioSeleccionado}" rows="5"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15"
+					paginatorPosition="bottom">
+
+					<p:ajax event="rowSelect" update="detalleForm:detalleFragment"
+						oncomplete="PF('detalle').show()" />
+
+					<p:column headerText="Código" sortBy="#{usuario.codigo}">
+						<h:outputText value="#{usuario.codigo}" />
+					</p:column>
+					<p:column headerText="Nombre" sortBy="#{usuario.nombre}">
+						<h:outputText value="#{usuario.nombre}" />
+					</p:column>
+					<p:column headerText="Passwd" sortBy="#{usuario.passwd}">
+						<h:outputText value="#{usuario.passwd}" />
+					</p:column>
+					<p:column headerText="Rol" sortBy="#{usuario.rol.nombre}">
+						<h:outputText value="#{usuario.rol.nombre}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+
+		<p:commandButton id="probar" value="#{identity.usuario}"
+						actionListener="#{usuarioController.probar}" />
+						
+		<h:form id="detalleForm">
+			<p:dialog id="dialogoDetalle" widgetVar="detalle" resizable="false"
+				header="Detalle de Usuario" modal="true">
+				<p:fragment id="detalleFragment">
+					<h:panelGrid columns="2" cellpadding="5"
+						rendered="#{usuarioController.usuarioSeleccionado != null}">
+						<p:outputLabel for="codigo" value="Código:" />
+						<p:inputText required="true" id="codigo" maxlength="7"
+							value="#{usuarioController.usuarioSeleccionado.codigo}"
+							disabled="#{usuarioController.usuarioSeleccionado.codigo != null}" />					
+						<p:outputLabel for="nombre" value="Nombre:" />
+						<p:inputText required="true" id="nombre" maxlength="30"
+							value="#{usuarioController.usuarioSeleccionado.nombre}" />
+						<p:outputLabel for="email" value="EMail:" />
+						<p:inputText required="true" id="email"
+							value="#{usuarioController.usuarioSeleccionado.email}" />
+						<p:outputLabel for="passwd" value="Password:" />
+						<p:inputText required="false" id="passwd" maxlength="8"
+							value="#{usuarioController.usuarioSeleccionado.passwd}" />
+						<p:outputLabel for="rol" value="Rol:" />
+						<p:selectOneMenu id="rol"
+							value="#{usuarioController.usuarioSeleccionado.rol.nombre}">
+							<f:selectItems value="#{usuarioController.comboRoles}" var="rol"
+								itemLabel="#{rol.nombre}" itemValue="#{rol.nombre}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+					<h:panelGrid columns="3">
+						<p:commandButton id="guardarNuevo" value="Guardar"
+							actionListener="#{usuarioController.insertar}"
+							update="detalleFragment,filtros:listaResultados"
+							rendered="#{usuarioController.usuarioSeleccionado.codigo == null}"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('detalle').hide()" />
+						<p:commandButton id="modificar" value="Guardar"
+							actionListener="#{usuarioController.actualizar}"
+							update="detalleFragment,filtros:listaResultados"
+							rendered="#{usuarioController.usuarioSeleccionado.codigo != null}"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('detalle').hide()" />
+						<p:commandButton id="eliminar" value="Borrar"
+							actionListener="#{usuarioController.borrar}"
+							update="detalleFragment,filtros:listaResultados"
+							rendered="#{usuarioController.usuarioSeleccionado.codigo != null}"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('detalle').hide()" />
+						<p:commandButton id="cancelar" value="Cancelar" immediate="true"
+							oncomplete="PF('detalle').hide()" />
+					</h:panelGrid>
+				</p:fragment>
+
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

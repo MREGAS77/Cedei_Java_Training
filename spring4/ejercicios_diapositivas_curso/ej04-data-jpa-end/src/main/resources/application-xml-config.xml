@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/aop     http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx      http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<aop:config>
+		<aop:pointcut id="services" expression="execution (public * net.atos.cedei.cursospring.service.*Service.*(..))" />
+		<aop:advisor pointcut-ref="services" advice-ref="txAdvice"/>
+	</aop:config>
+	
+	<tx:advice id="txAdvice">
+		<tx:attributes>
+			<tx:method name="retrieve*" read-only="true"/>
+			<tx:method name="find*" read-only="true"/>
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- Exception translation bean post processor -->
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+	
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" >
+				<property name="database" value="HSQL" />
+			</bean>
+		</property>
+		<property name="jpaProperties">
+      		<props>
+         		<prop key="hibernate.show_sql">false</prop>
+         		<prop key="hibernate.format_sql">true</prop>
+         		<prop key="hibernate.hbm2ddl.auto">none</prop>
+      		</props>
+   		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+	<bean id="taskDAO" class="net.atos.cedei.cursospring.dao.TaskDAOImpl">
+		<property name="entityManager" ref="entityManager" />
+	</bean>
+
+	<bean id="taskService" class="net.atos.cedei.cursospring.service.TaskServiceImpl">
+		<property name="taskDAO" ref="taskDAO" />
+	</bean>
+
+</beans>

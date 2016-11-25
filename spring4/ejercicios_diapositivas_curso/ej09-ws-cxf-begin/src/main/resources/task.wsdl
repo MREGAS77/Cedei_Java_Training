@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+				 xmlns:sch="http://cursospring.cedei.atos.net/ws/schemas"
+				 xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+				 xmlns:tns="http://cursospring.cedei.atos.net/ws/service"
+				 xmlns:task="http://cursospring.cedei.atos.net/ws/schemas"
+				 targetNamespace="http://cursospring.cedei.atos.net/ws/service">
+
+	<wsdl:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://cursospring.cedei.atos.net/ws/schemas" schemaLocation="task.xsd"/>
+        </xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="findTasksResponse">
+		<wsdl:part name="findTasksResponse" element="task:findTasksResponse" />
+	</wsdl:message>
+	<wsdl:message name="findTasksRequest">
+		<wsdl:part name="findTasksRequest" element="task:findTasksRequest" />
+	</wsdl:message>
+
+	<wsdl:portType name="taskPortType">
+		<wsdl:operation name="findTasks">
+			<wsdl:input message="tns:findTasksRequest" name="findTasksRequest">
+			</wsdl:input>
+			<wsdl:output message="tns:findTasksResponse" name="findTasksResponse">
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="taskSoap11" type="tns:taskPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="findTasks">
+			<soap:operation soapAction="" />
+			<wsdl:input name="findTasksRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="findTasksResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="taskService">
+		<wsdl:port binding="tns:taskSoap11" name="taskSoap11">
+			<soap:address location="http://localhost:8080/ej09-ws-cxf-end/api/ws/taskService" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

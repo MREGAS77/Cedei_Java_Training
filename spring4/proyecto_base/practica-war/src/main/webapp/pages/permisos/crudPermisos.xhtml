@@ -1,0 +1,61 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="body" >
+	<p:fragment rendered="#{identity.tieneAcceso('MANTPERMISO')}">
+		<h:form id="filtros" >
+			<p:panel header="Criterios de Búsqueda de Permisos">
+				<p:panelGrid columns="2" >
+					<p:outputLabel for="nombreFiltro" value="Nombre:" />
+					<p:inputText required="false" id="nombreFiltro" value="#{permisoController.filtro.nombre}"/>
+					<p:outputLabel for="descripcionFiltro" value="Descripcion:" />
+					<p:inputText required="false" id="descripcionFiltro" value="#{permisoController.filtro.descripcion}"/>
+					<p:commandButton id="buscar" value="Buscar" actionListener="#{permisoController.buscar}" update="listaResultados" />
+					<p:commandButton id="nuevo" value="Nuevo" actionListener="#{permisoController.nuevoPermiso}" update="detalleForm" oncomplete="PF('detalle').show()" />
+				</p:panelGrid>
+			</p:panel>
+			
+			<p:panel header="Resultados de la Búsqueda de permisoes">
+				<p:dataTable 	id="listaResultados" value="#{permisoController.lista}" rowKey="#{permiso.nombre}" 
+								var="permiso" sortMode="single" selectionMode="single" selection="#{permisoController.permisoSeleccionado}">
+		
+					<p:ajax event="rowSelect" update="detalleForm:detalleFragment"  oncomplete="PF('detalle').show()"/>
+					
+					<p:column headerText="Nombre" sortBy="#{permiso.nombre}">
+						<h:outputText value="#{permiso.nombre}" />
+					</p:column>
+					<p:column headerText="Descripcion" sortBy="#{permiso.descripcion}">
+						<h:outputText value="#{permiso.descripcion}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+			
+			
+		<h:form id="detalleForm">
+			<p:dialog id="dialogoDetalle" widgetVar="detalle" resizable="false" header="Detalle de permiso" modal="true">
+				<p:fragment id="detalleFragment">
+					<h:panelGrid columns="2" cellpadding="3">
+						<p:outputLabel for="nombre" value="Nombre:" />
+						<p:inputText required="true" id="nombre" maxlength="15" value="#{permisoController.permisoSeleccionado.nombre}" disabled="#{permisoController.permisoSeleccionado.nombre != null}"/>
+						<p:outputLabel for="descripcion" value="Descripcion:" />
+						<p:inputText required="false" id="descripcion" value="#{permisoController.permisoSeleccionado.descripcion}"/>
+					</h:panelGrid>	
+					<h:panelGrid columns="3" >
+						<p:commandButton id="guardarNuevo" value="Guardar" actionListener="#{permisoController.insertar}" update="detalleFragment,filtros:listaResultados" rendered="#{permisoController.permisoSeleccionado.nombre == null}" oncomplete="if (args &amp;&amp; !args.validationFailed) PF('detalle').hide()"/>
+						<p:commandButton id="modificar" value="Guardar" actionListener="#{permisoController.actualizar}" update="detalleFragment,filtros:listaResultados" rendered="#{permisoController.permisoSeleccionado.nombre != null}"  oncomplete="if (args &amp;&amp; !args.validationFailed) PF('detalle').hide()"/>
+						<p:commandButton id="eliminar" value="Borrar" actionListener="#{permisoController.borrar}" update="detalleFragment,filtros:listaResultados" rendered="#{permisoController.permisoSeleccionado.nombre != null}"  oncomplete="if (args &amp;&amp; !args.validationFailed) PF('detalle').hide()"/>
+						<p:commandButton id="cancelar" value="Cancelar" immediate="true" oncomplete="PF('detalle').hide()"/>
+					</h:panelGrid>
+				</p:fragment>
+			
+			</p:dialog>
+		
+		</h:form>
+		</p:fragment>
+	</ui:define>
+	
+</ui:composition>

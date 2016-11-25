@@ -1,0 +1,40 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+    		http://www.springframework.org/schema/beans/spring-beans.xsd
+    		http://www.springframework.org/schema/aop
+    		http://www.springframework.org/schema/aop/spring-aop.xsd
+    		http://www.springframework.org/schema/context
+    		http://www.springframework.org/schema/context/spring-context.xsd
+    		http://www.springframework.org/schema/tx
+    		http://www.springframework.org/schema/tx/spring-tx.xsd"> 
+
+    <!-- Inyeccion de dependencias -->
+    <context:annotation-config />  
+  
+    <!--  Búsqueda de toda la paquetería de clases, para la gestión de anotiaciones como @Controller, @Service, @Repository y @Component -->
+    <context:component-scan base-package="es.atos.*" />    
+    
+     <!-- Este bean nos habilitara la herramienta de administracion de la base 
+		de datos embebida a traves del web. La url de acceso sera http://localhost:6000 -->
+	 <bean id = "org.h2.tools.Server"
+            class="org.h2.tools.Server"
+            factory-method="createTcpServer"
+            init-method="start"
+            destroy-method="stop">
+	    <constructor-arg value="-tcp,-tcpAllowOthers" />
+	</bean>
+	
+	<!-- Definir la conexion del datasource -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.h2.Driver" />
+		<property name="url" value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1" />
+		<property name="username" value="userInTest" />
+		<property name="password" value="userInTest" />
+	</bean>
+	
+</beans>  

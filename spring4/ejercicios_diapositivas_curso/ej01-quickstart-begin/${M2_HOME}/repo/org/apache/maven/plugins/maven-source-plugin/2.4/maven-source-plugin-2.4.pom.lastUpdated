@@ -1,0 +1,6 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Tue Nov 08 09:45:00 GMT 2016
+32bff95d6af9ca14c6e0d27b9d81aec1e4b8781a@default-atosorigin-releases-https\://ic.es.atosorigin.com/nexus/content/repositories/atosorigin-releases/.lastUpdated=1478598300454
+https\://ic.es.atosorigin.com/nexus/content/repositories/atosorigin-releases/.error=Could not transfer artifact org.apache.maven.plugins\:maven-source-plugin\:pom\:2.4 from/to atosorigin-releases (https\://ic.es.atosorigin.com/nexus/content/repositories/atosorigin-releases)\: handshake alert\:  unrecognized_name
+https\://ic.es.atosorigin.com/nexus/content/groups/atosorigin-public/.error=Could not transfer artifact org.apache.maven.plugins\:maven-source-plugin\:pom\:2.4 from/to nexus-common (https\://ic.es.atosorigin.com/nexus/content/groups/atosorigin-public)\: handshake alert\:  unrecognized_name
+32bff95d6af9ca14c6e0d27b9d81aec1e4b8781a@default-nexus-common-https\://ic.es.atosorigin.com/nexus/content/groups/atosorigin-public/.lastUpdated=1478598300330

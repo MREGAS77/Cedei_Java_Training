@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+		   xmlns:tns="http://cursospring.cedei.atos.net/ws/schemas" 
+		   targetNamespace="http://cursospring.cedei.atos.net/ws/schemas">
+
+	<!-- DOMAIN -->
+	<xsd:complexType name="Task">
+		<xsd:sequence>
+			<xsd:element name="id" type="xsd:long" />
+			<xsd:element name="name" type="xsd:string" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<!-- OPERATIONS -->
+	<xsd:element name="findTasksRequest">
+		
+        <xsd:complexType />
+    </xsd:element>
+	<xsd:element name="findTasksResponse">
+		
+        <xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="tasks" type="tns:Task" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

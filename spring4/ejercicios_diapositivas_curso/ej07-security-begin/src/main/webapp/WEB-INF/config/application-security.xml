@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation=" 
+        http://www.springframework.org/schema/mvc      http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans    http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<!-- TODO 2: Configurar seguridad de páginas -->
+	
+	<!-- TODO 3: Configurar authentication-manarger -->
+	
+	<!-- TODO 4: Configurar authentication manager para que codifique el password con “md5” y usar como “salt” el texto “MySalt” -->
+    
+    <!-- TODO 5: Configurar seguridad a nivel de métodos -->
+
+</beans>

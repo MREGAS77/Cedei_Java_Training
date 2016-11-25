@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:sws="http://www.springframework.org/schema/web-services"
+    xmlns:oxm="http://www.springframework.org/schema/oxm"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services.xsd">
+
+    <oxm:jaxb2-marshaller id="marshaller" context-path="net.atos.cedei.cursospring.ws.schemas" />
+
+    <context:component-scan base-package="net.atos.cedei.cursospring.ws.server" />
+
+    <!-- Configures the annotation-driven Spring WS endpoint programming model. -->
+    <sws:annotation-driven />
+
+    <!-- 
+        Exposes a dynamic WSDL file, creating a SOAP 1.1 or 1.2 binding based on naming conventions in one or more inlined XSD schemas. 
+        Ex: http://localhost:8080/ej08-ws-spring-end/api/ws/taskService/task.wsdl 
+     -->
+    <sws:dynamic-wsdl id="task" portTypeName="taskPortType" targetNamespace="http://cursospring.cedei.atos.net/ws/service" locationUri="/api/ws/taskService">
+        <sws:xsd location="classpath:task.xsd" />
+    </sws:dynamic-wsdl>
+
+
+</beans>
